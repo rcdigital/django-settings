@@ -9,21 +9,21 @@ global repo_path
 
 def dev():
     global repo_path
-    repo_path = '/sites/tempo-cirurgia-plastica'
+    repo_path = '/sites/{{PROJECT_NAME}}'
     env.user = user.name
-    env.hosts = ['50.56.189.99']
+    env.hosts = []
 
 def prod():
     global repo_path
-    repo_path = '/sites/tempo-cirurgia-plastica'
+    repo_path = '/sites/{{PROJECT_NAME}}'
     env.user = user.name
-    env.hosts = ['108.166.75.208']
+    env.hosts = []
 
 def config():
     global repo_path
     _printOut('Creating repo on: '+str(env.hosts))
     with cd('/sites/'):
-        sudo('hg clone ssh://hg@bitbucket.org/rccomunicacao/tempo-cirurgia-plastica', user='www-data')
+        sudo('hg clone ssh://hg@bitbucket.org/rccomunicacao/{{PROJECT_NAME}}', user='www-data')
     with cd(repo_path):
         sudo('virtualenv --distribute env', user='www-data')
         with prefix('source env/bin/activate'):
