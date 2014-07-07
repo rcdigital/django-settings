@@ -11,13 +11,13 @@ def dev():
     global repo_path
     repo_path = '/sites/{{PROJECT_NAME}}'
     env.user = user.name
-    env.hosts = []
+    env.hosts = ['{{DEV_IP}}']
 
 def prod():
     global repo_path
     repo_path = '/sites/{{PROJECT_NAME}}'
     env.user = user.name
-    env.hosts = []
+    env.hosts = ['{{PROD_IP}}']
 
 def config():
     global repo_path
@@ -29,13 +29,13 @@ def config():
         with prefix('source env/bin/activate'):
             print('Installing environment')
             sudo('pip install -r requirements.txt', user='www-data')
-            sudo('cp tempo/local_settings_template.py tempo/local_settings.py', user='www-data')
-            database_name = prompt('Name of MySQL database to be created: ', default='tempo')
+            sudo('cp {{PROJECT_ID}}/local_settings_template.py {{PROJECT_ID}}/local_settings.py', user='www-data')
+            database_name = prompt('Name of MySQL database to be created: ', default='{{PROJECT_ID}}')
             sudo('mysql -u root -p -e "create database %s"'%database_name, user='www-data')
             print('Now starting the configure of the local_settings.py module')
         config_local_settings()
-        put('tempo/server_local_settings.py', 'tempo/local_settings.py', use_sudo=True)
-        sudo('chown www-data:www-data tempo/local_settings.py')
+        put('{{PROJECT_ID}}/server_local_settings.py', '{{PROJECT_ID}}/local_settings.py', use_sudo=True)
+        sudo('chown www-data:www-data {{PROJECT_ID}}/local_settings.py')
         with prefix('source env/bin/activate'):
             sudo('python manage.py syncdb', user='www-data')
         print('Configure wsgi bridge file')
@@ -62,10 +62,10 @@ def config_wsgi_file():
 def config_local_settings():
     global repo_path
     # Read template file
-    with open('tempo/local_settings_template.py') as f:
+    with open('{{PROJECT_ID}}/local_settings_template.py') as f:
         configurations = f.read()
     # Write configuration file with user options
-    new_config = open('tempo/server_local_settings.py', 'w')
+    new_config = open('{{PROJECT_ID}}/server_local_settings.py', 'w')
     new_config.write(
             configurations \
             .replace('{{PATH}}', repo_path+'/') \
