@@ -55,7 +55,7 @@ def config_wsgi_file():
     new_config.write(
             configurations \
             .replace('{{PROJECT_PATH}}', repo_path) \
-            .replace('{{MODULE_NAME}}', 'tempo')
+            .replace('{{MODULE_NAME}}', '{{PROJECT_ID}}')
             )
     new_config.close()
 
@@ -71,7 +71,7 @@ def config_local_settings():
             .replace('{{PATH}}', repo_path+'/') \
             .replace('{{SECRET}}', prompt('Some unique string for hashs: ')) \
             .replace('{{DB_TYPE}}', prompt('Type of db (mysql, sqlite3): ', default='mysql')) \
-            .replace('{{DB_NAME}}', prompt('Name of database: ', default='tempo')) \
+            .replace('{{DB_NAME}}', prompt('Name of database: ', default='{{PROJECT_ID}}')) \
             .replace('{{DB_USER}}', prompt('Database username: ', default='root')) \
             .replace('{{DB_PASS}}', prompt('Database password: ')) \
             .replace('{{DB_HOST}}', prompt('Database host, empty for localhost: ')) \
